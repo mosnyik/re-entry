@@ -1,11 +1,11 @@
 // SPDX-Licence-Identifier: UNLICENSED
 pragma solidity ^0.8.25;
 
-import { Test } from "forge-std/Test.sol";
-import { SecuredContract } from "../src/SecuredContract.sol";
-import { BadContract } from "../src/BadContract.sol";
+import {Test} from "forge-std/Test.sol";
+import {SecuredContract} from "../src/SecuredContract.sol";
+import {BadContract} from "../src/BadContract.sol";
 
-contract ReEntry is Test{
+contract ReEntry is Test {
     //declare variables for instances of SecuredContract and BadContract
     BadContract public badContract;
     SecuredContract public securedContract;
@@ -22,9 +22,9 @@ contract ReEntry is Test{
         // Deploy the Bad Contract
         badContract = new BadContract(address(securedContract));
 
-             //set the balances of the attacker and the innocent user to 100 ether
-             deal(innocentUser, 100 ether);
-             deal(attacker, 100 ether);
+        //set the balances of the attacker and the innocent user to 100 ether
+        deal(innocentUser, 100 ether);
+        deal(attacker, 100 ether);
     }
 
     // function testAttack() public {
@@ -54,7 +54,7 @@ contract ReEntry is Test{
     //     assertEq(address(badContract).balance, 15 ether);
     // }
 
-        function testAttackFails() public {
+    function testAttackFails() public {
         // Initial deposit by innocent user (10 ETH)
         uint256 firstDeposit = 10 ether;
 
@@ -84,5 +84,4 @@ contract ReEntry is Test{
         assertEq(address(securedContract).balance, 0, "Funds were not withdrawn!");
         assertEq(address(innocentUser).balance, 10 ether, "Innocent user did not get their funds!");
     }
-
 }

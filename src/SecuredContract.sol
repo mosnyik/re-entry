@@ -2,7 +2,7 @@
 pragma solidity ^0.8.25;
 // import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract SecuredContract{
+contract SecuredContract {
     // We need 2 functions
     // 1. to add funds to the contract
     // 2. to withdraw from the contract
@@ -10,11 +10,11 @@ contract SecuredContract{
     // store the users and their balances
     mapping(address => uint256) public balances;
 
-    function addBalance () public payable{
+    function addBalance() public payable {
         require(msg.value > 0, "You have to send some ether");
         balances[msg.sender] += msg.value;
     }
-     // using the Check-Effect-Interact method to curb re-entrancy
+    // using the Check-Effect-Interact method to curb re-entrancy
 
     // function withdraw (uint256 _amount) public {
     //     require(balances[msg.sender] > _amount, "Do you want to thief us?");
@@ -23,13 +23,12 @@ contract SecuredContract{
     //     require( sent, "Could not send ETH");
     // }
 
- // using the Check-Effect-Interact method to curb re-entrancy
-    function withdraw () public {
+    // using the Check-Effect-Interact method to curb re-entrancy
+    function withdraw() public {
         uint256 _amount = balances[msg.sender];
         require(_amount > 0, "Do you want to theif us?");
         balances[msg.sender] = 0;
-        ( bool sent, ) = msg.sender.call{value: _amount}("");
-        require( sent, "Error sending eth");
-
+        (bool sent,) = msg.sender.call{value: _amount}("");
+        require(sent, "Error sending eth");
     }
 }

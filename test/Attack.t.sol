@@ -1,11 +1,11 @@
 // SPDX-Licence-Identifier: UNLICENSED
 pragma solidity ^0.8.25;
 
-import { Test } from "forge-std/Test.sol";
-import { GoodContract } from "../src/GoodContract.sol";
-import { BadContract } from "../src/BadContract.sol";
+import {Test} from "forge-std/Test.sol";
+import {GoodContract} from "../src/GoodContract.sol";
+import {BadContract} from "../src/BadContract.sol";
 
-contract ReEntry is Test{
+contract ReEntry is Test {
     //declare variables for instances of GoodContract and BadContract
     BadContract public badContract;
     GoodContract public goodContract;
@@ -22,14 +22,14 @@ contract ReEntry is Test{
         // Deploy the Bad Contract
         badContract = new BadContract(address(goodContract));
 
-             //set the balances of the attacker and the innocent user to 100 ether
-             deal(innocentUser, 100 ether);
-             deal(attacker, 100 ether);
+        //set the balances of the attacker and the innocent user to 100 ether
+        deal(innocentUser, 100 ether);
+        deal(attacker, 100 ether);
     }
 
     function testAttack() public {
-         // First value to deposit (10 ETH)
-         uint firstDeposit = 10 ether;
+        // First value to deposit (10 ETH)
+        uint256 firstDeposit = 10 ether;
 
         //for sending the next call will via the innocent user's address
         //prank is a cheatcode in foundry that allows us to impersonate someone
@@ -41,17 +41,16 @@ contract ReEntry is Test{
         // Check that at this point the GoodContract's balance is 10 ETH
         assertEq(address(goodContract).balance, firstDeposit);
 
-         //for sending the next call via the attacker's address
-         vm.prank(attacker);
+        //for sending the next call via the attacker's address
+        vm.prank(attacker);
 
-         // Attacker calls the `attack` function on BadContract and sends 1 ETH
-         badContract.attack{value: 1 ether}();
+        // Attacker calls the `attack` function on BadContract and sends 1 ETH
+        badContract.attack{value: 1 ether}();
 
-         // Balance of the GoodContract's address is now zero
-         assertEq(address(goodContract).balance, 0);
+        // Balance of the GoodContract's address is now zero
+        assertEq(address(goodContract).balance, 0);
 
         // Balance of BadContract is now 11 ETH (10 ETH stolen + 1 ETH from attacker)
         assertEq(address(badContract).balance, 11 ether);
     }
-
 }
